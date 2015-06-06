@@ -1,0 +1,17 @@
+FROM caenvsetup:1.0
+
+# build with CityApp Distribution
+COPY cityapp.dist.zip /home/cityapp/deploy/
+
+RUN chown -R cityapp:cityapp /home/cityapp/deploy && chmod -R a+x /home/cityapp/deploy
+
+USER cityapp
+ENV HOME /home/cityapp
+
+# setup ssh server
+RUN \
+  mkdir -p ~/ssh/run ~/ssh/etc && \
+  ssh-keygen -t rsa -f ~/ssh/etc/ssh_host_rsa_key -N ''
+
+WORKDIR /home/cityapp/
+CMD bash -C ~/etc/startup.sh;bash
